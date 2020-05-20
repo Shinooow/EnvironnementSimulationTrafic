@@ -1,0 +1,5 @@
+A FAIRE IMPERATIVEMENT POUR LA CONNEXION BLUETOOTH:
+
+SUR LE FICHIER bluetooth_connexion.java DANS LE CONSTRUCTEUR IL FAUT CHANGER LE CHEMIN DU .JAR
+(ne fonctionne pas avec les ./ ?)
+DANS LES TROIS APPELS DE properties.setProperty
