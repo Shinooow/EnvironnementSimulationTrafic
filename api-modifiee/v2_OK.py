@@ -1,3 +1,5 @@
+# -*- encoding: UTF-8 -*-
+
 import os
 import sys
 import time
@@ -8,108 +10,26 @@ from BluetoothClass import *
 
 # Initialise n emplacements pour des sockets Bluetooth
 
-macro_rec = []
-#Initialise les noms des appreils connectés
-app_1 = ""
-app_2 = ""
-app_3 = ""
-apps=[app_1, app_2, app_3]
-
 # Une socket Bluetooth
 def connectNewDevice(macaddr, selectedCar) :
     new_socket = Bluetooth()
-    print("selectedCar = ", selectedCar)
     if appareils_connectes[selectedCar] == None :
         #print("appareils_connectes[selectedCar] = ", appareils_connectes[selectedCar])
-        try :
-            new_socket.connect(macaddr)
-            appareils_connectes[selectedCar] = new_socket  # enregistre la socket dans notre liste d'appareils connectés
-        except OSError:
-            # Gère une erreur de connexion, si on désactive le bluetooth après le scan
-            text_state_car.set("Connection ERROR ! Device is not ON/available")
+        new_socket.connect(macaddr)
+        appareils_connectes[selectedCar] = new_socket  # enregistre la socket dans notre liste d'appareils connectés
     else :
-        print("Vous êtes déjà connecté à cet appareil !")
+        print("Vous etes deja connecte a cet appareil !")
 
 # Déconnexion d'une socket
 def disconnectDevice(selectedCar):
-    appareils_connectes[selectedCar].close(selectedCar)
-    appareils_connectes[selectedCar] = None
+    if appareils_connectes[selectedCar] != None:
+        appareils_connectes[selectedCar].close(selectedCar)
+        appareils_connectes[selectedCar] = None
+    else: 
+        print("L appareil ", selectedCar, " est deja deconnecte")
     # TODO : IF closed -> Refresh affichage graphique : "Connection successful" -> "Enter a device name"
 
-###########################################################################
-# Bluetooth scanning
-"""
-appareilsDispo = []      # Liste des appareils proches
-def f_scan():
-    text_state_car.set('Start scanning')
-    appareilsDetectes = [] #discover_devices(lookup_names=True, duration=2)
-    print("appareilsDetectes =", appareilsDetectes)
-     
-    if appareilsDispo == [] :
-        #La liste des appareils PROCHES
-        for _mac, _name in appareilsDetectes:
-            # Filtre seulement les appareils "beewi"
-            if "beewi" in _name.lower():
-                print(_mac, " ", _name)
-                appareilsDispo.append((_mac, _name))
-        print("appareilsDispo =", appareilsDispo)
-        for newMac, newName in appareilsDispo:
-            # On a une nouvelle voiture Beewi
-            if ("beewi" in newName.lower()):
-                # Ajoute un nouveau véhicule à la fin de la liste de choix
-                choix_voitures['values'] = (*choix_voitures['values'], newName)
-    else :
-        macDispo = [x[0] for x in appareilsDispo]
-        # print("maaac",macDispo)
-        # Met à jour la liste des véhicules disponibles
-        for newMac, newName in appareilsDetectes:
-            print(newMac,newName)
-            # On a une nouvelle voiture Beewi
-            if (newMac not in macDispo) and ("beewi" in newName.lower()):
-                # Ajoute un nouveau véhicule à la fin de la liste de choix
-                choix_voitures['values'] = (*choix_voitures['values'], newName)
 
-    # Maintenant on peut selectionner une voiture :
-    choix_voitures['state'] = "enabled"
-    btn_connect['state'] = NORMAL
-"""
-# Bluetooth connection
-"""
-def f_connect():
-    car = []
-    selectedCar = choix_voitures.current()
-    # choix_voitures['state'] = "disabled"
-    # Assure qu'on ait choisi une voiture parmi les choix disponibles
-    if selectedCar != -1 : 
-        try :
-            car = appareilsDispo[selectedCar]
-            # Connexion à la voiture
-            macaddr = car[0]
-        except IndexError:  # outofbounds
-            text_state_car.set('Please enable Bluetooth on your laptop !')
-
-        if (car != []):
-             # Enregistre la socket associée à la voiture connectée
-            new_sock = Bluetooth()
-            try :
-                new_sock.connect(macaddr)
-                appareils_connectes[selectedCar] = new_sock  # passe le numéro de la voiture (indice de la liste de choix)
-            except OSError:
-                # Gère une erreur de connexion, si on désactive le bluetooth après le scan
-                print("Connection ERROR ! Device is not ON/available")
-    print("Les appareils connectes :",appareils_connectes)
-"""
-#Affichage appareils connectés
-def devices_connected(car):
-    for i in range (len(apps)):
-        if(apps[i] == ""):
-            apps[i] = car
-    app_connect_1.pack_forget()
-    app_connect_2.pack_forget()
-    app_connect_3.pack_forget()
-    app_connect_1.pack(anchor="n")
-    app_connect_2.pack(anchor="n")
-    app_connect_3.pack(anchor="n")
 
 ###########################################################################
 ###########################################################################
@@ -273,110 +193,79 @@ def backward_to_right(num_car):
 # Fonctions de macro prédéfinies
 
 # Macro 1 - Demi-tour gauche
-def m1(event):
-    forward_to_left(event)
+def m1(selectedCar):
+    forward_to_left(selectedCar)
     time.sleep(1)
-    backward_to_right(event)
+    backward_to_right(selectedCar)
     time.sleep(1)
-    forward_to_left(event)
+    forward_to_left(selectedCar)
 
 # Macro 2 - Demi-tour droite
-def m2(event):
-    forward_to_right(event)
+def m2(selectedCar):
+    forward_to_right(selectedCar)
     time.sleep(1)
-    backward_to_left(event)
+    backward_to_left(selectedCar)
     time.sleep(1)
-    forward_to_right(event)
+    forward_to_right(selectedCar)
 
 # Macro 3 - Cercle dans le sens des aiguilles d'une montre
-def m3(event):
-    forward_to_right(event)
+def m3(selectedCar):
+    forward_to_right(selectedCar)
     time.sleep(0.5)
-    forward_to_right(event)
+    forward_to_right(selectedCar)
     time.sleep(0.5)
-    forward_to_right(event)
+    forward_to_right(selectedCar)
     time.sleep(0.5)
-    forward_to_right(event)
+    forward_to_right(selectedCar)
     time.sleep(0.5)
-    forward_to_right(event)
+    forward_to_right(selectedCar)
 
 # Macro 4 - Cercle dans le sens inverse des aiguilles d'une montre
-def m4(event):
-    forward_to_left(event)
+def m4(selectedCar):
+    forward_to_left(selectedCar)
     time.sleep(0.5)
-    forward_to_left(event)
+    forward_to_left(selectedCar)
     time.sleep(0.5)
-    forward_to_left(event)
+    forward_to_left(selectedCar)
     time.sleep(0.5)
-    forward_to_left(event)
+    forward_to_left(selectedCar)
     time.sleep(0.5)
-    forward_to_left(event)
-
+    forward_to_left(selectedCar)
+   
 # Macro 5 - Rangement en creneau
-def m5(event):
-    move_forward(event)
+def m5(selectedCar):
+    move_forward(selectedCar)
     time.sleep(0.5)
-    backward_to_right(event)
+    backward_to_right(selectedCar)
     time.sleep(1)
-    backward_to_right(event)
+    backward_to_right(selectedCar)
     time.sleep(1)
-    backward_to_left(event)
+    backward_to_left(selectedCar)
     time.sleep(0.1)
 
 # Macro 6 - Rangement en épis avant
-def m6(event):
-    forward_to_left(event)
+def m6(selectedCar):
+    forward_to_left(selectedCar)
     time.sleep(1)
-    move_backward(event)
+    move_backward(selectedCar)
 
 # Macro 7 - Rangement en épis arriere
-def m7(event):
-    backward_to_left(event)
+def m7(selectedCar):
+    backward_to_left(selectedCar)
     time.sleep(1)
-    move_forward(event)
+    move_forward(selectedCar)
 
 # Macro 8 - Slalom
-def m8(event):
-    forward_to_right(event)
+def m8(selectedCar):
+    forward_to_right(selectedCar)
     time.sleep(0.7)
-    forward_to_left(event)
+    forward_to_left(selectedCar)
     time.sleep(0.7)
-    forward_to_right(event)
+    forward_to_right(selectedCar)
     time.sleep(0.7)
-    forward_to_left(event)
+    forward_to_left(selectedCar)
     time.sleep(0.7)
-    forward_to_right(event)
-
-###########################################################################
-# Fonction d'enregistrement
-
-def write_rec():
-    global macro_rec
-    print("oui")
-    if (varRec.get()):
-        print("BEGIN : REC")
-    else:
-        print("END : REC")
-        print(macro_rec)
-        macro_rec = []
-
-def read_rec(event,macro):
-    for c in macro:
-        if (c==1):  
-            move_forward(event)
-        elif (c==2):
-            move_backward(event)
-        elif (c==3):
-            forward_to_left(event)
-        elif (c==4):
-            forward_to_right(event)
-        elif (c==5):
-            backward_to_left(event)
-        elif (c==6):  
-            backward_to_right(event)
-        time.sleep(1)        
-
-
+    forward_to_right(selectedCar)
 
 
 ####### INFORMATIONS
@@ -391,22 +280,12 @@ def connect_all_cars(nombre_voiture):
 #SUPPRESSION/DECONNEXION DES VOITURES
 def disconnect_all_cars(appareils_connectes):
     for i in range(len(appareils_connectes)):
-        disconnectDevice(i)
+        if appareils_connectes[i] != None:
+            disconnectDevice(i)
 
-#
-if len(sys.argv) == 2:
-    nombre_voiture = int(sys.argv[1])
-    appareils_connectes = [None] * nombre_voiture 
-    #TESTS
-    #connect_all_cars(nombre_voiture)
-    #move_backward(1)
-    #forward_to_right(1)
-    #forward_to_left(1)
-    #backward_to_right(1)
-    #backward_to_left(0)
-    #disconnect_all_cars(appareils_connectes)
-else: 
-    print("Usage: <nombre de voiture>") 
+
+#Nombre maximal de voiture placé à 30
+appareils_connectes = [None] * 30
 
 
 
