@@ -2,7 +2,7 @@
 
 - Installer Gama en mode développeur avec le plug-in (voir https://gama-platform.github.io/)
 - Installer les différents modules Bluetooth reliés à python pour utiliser l'API (voir https://github.com/Matt8198/ProjDev)
-- Le plug-in Gama est disponible sur ce lien (représenté par le projet Eclipse correspondant) : https://mega.nz/file/IF510bJI#BT-VBlloHrhL5qQAYwnDbjXrDdyFbvQFB3-_4IuKHK0 il faut ensuite créer la feature et l'ajouter au projet Gama
+- Une fois le plug-in ajouté à Gama, il faut télécharger le .jar de Jython (https://www.jython.org/) et le placer directement dans le répertoire bluetooth_connection. Veuillez lire le txt connexion bluetooth ci-dessus pour finaliser l'installation du module
 - Le reste des instructions pour l'utilisation de l'environnement se trouvent dans la documentation
 
 
