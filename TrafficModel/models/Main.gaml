@@ -27,7 +27,7 @@ global {
 	 * - 3: experience de test de rond point
 	 * - 4: experience de test sur le campus Paul Sabatier
 	 */
-	int expChoice <- 4;
+	int expChoice <- 0;
 	string pathRoad <- getRoadPathFile();
 	string zPathCheck <- getCheckpointPathFile();
 	
@@ -41,13 +41,6 @@ global {
 	/* World paramaters */
 	date starting_date <- date("2020-04-10-00-00-00");
 	float step <- 3 #mn;
-	
-	/* LECTURE DES INFORMATIONS DE LA CAMERA */
-	csv_file csv_camera <- csv_file("../includes/data_cameraV2.csv");
-	matrix csv_matrice <- matrix(csv_camera);
-	/* Version si modification d'une seule ligne par etape */
-	list<float> list_ligne <- list<float>(row_at(csv_matrice, 0)); 
-	/* Version depuis fichiers de logs */
 	
 	/* duree d'un cycle avant les changements de position des checkpoint (en heures) */
 	int cycle_time_checkpoint <- 2;
@@ -125,10 +118,8 @@ global {
 	action consBluetoothCar {
 		create BluetoothCar {
 			self.idGuidable <- idGuidableVehicleCreated;
-			self.location <- {list_ligne[2*self.idGuidable], list_ligne[2*self.idGuidable+1], 0.0};
-			//self.angle_rotation <- float(list_ligne[3*self.idGuidable+2]);
 			idGuidableVehicleCreated <- idGuidableVehicleCreated+1;
-			do connectCar(self.idGuidable);
+			do connectCar();
 			self.is_connected <- true;
 			add self to: vehicules;
 		}
@@ -276,8 +267,11 @@ global {
 		loop times: 3 {
 			do consBike(0.05);
 		}
-		loop times: 3 {
+		loop times: 1 {
 			do consBluetoothCar;
+		}
+		if(socketInitialization(1)!=0) {
+			write "--Error camera loading";
 		}
 	}
 	
@@ -363,6 +357,9 @@ global {
 		loop times: 20 {
 			do consBike(0.1);
 		}
+		loop times: 3 {
+			do consBluetoothCar;
+		}
 	}
 	
 	/* Algorithme d'initialisation:
@@ -375,6 +372,7 @@ global {
 		create Road from: roads_shapefile;
 		create Checkpoint from: checkpoints_shapefile;
 		roadGraph <- as_edge_graph(Road.population);
+		
 		switch expChoice{
 			match 0 { do initBasicExp; break; }
 			match 1 { do initBrakeIfCollisionExp; break;}
@@ -392,28 +390,24 @@ global {
 	/** REFLEX ONE_STEP
 	 * Incremente la propriete nb_step permettant de savoir à un moment t a quelle etape
 	 * nous nous trouvons
-	 * Met aussi a jour les donnees recues par la camera
 	 */
 	reflex one_step {
 		
 		nb_step <- nb_step +1;
-//		csv_camera <- csv_file("../includes/data_camera.csv");
-//		csv_matrice <- matrix(csv_camera);
-		list_ligne <- list<float>(row_at(csv_matrice, nb_step)); 
 	}
 	
 	/** REFLEX STOP_SIMULATION
 	 * Condition: quand plus de donnees sont presentes sur la position des voitures depuis la camera
 	 * Deconnecte toute les voitures connectees en Bluetooth puis met en pause l'experimentation
 	 */
-	reflex stop_simulation when: nb_step = 49 {
+	reflex stop_simulation when: nb_step = 100 {
 		
 		loop car over: vehicules{
 			if(car is GuidableVehicle){
 				GuidableVehicle guidableCar <- GuidableVehicle(car);
 				ask guidableCar{
 					if(is_connected){
-						do disconnectCar(guidableCar.idGuidable);
+						do disconnectCar();
 					}
 				}
 			}

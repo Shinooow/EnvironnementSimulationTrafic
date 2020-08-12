@@ -4,13 +4,12 @@
 * Description: A model dedicated to run unit tests
 * Tags: Tag1, Tag2, TagN
 ***/
-
 model TestBluetooth
 
 import "../GenericVehicleSpecies/GuidableVehicle.gaml"
 
 global {
-	
+
 	/* Action de detruire l'agent utilise pour que chaque test 
 	 * soit independant l'un de l'autre
 	 */
@@ -20,15 +19,16 @@ global {
 			do die;
 		}
 	}
-	
+
 	setup {
-		/* Creation de l'agent voiture avant chaque test */
+	/* Creation de l'agent voiture avant chaque test */
 		create GuidableVehicle {
 			self.idGuidable <- 0;
 			self.is_connected <- false;
 		}
+
 	}
-	
+
 	/* Objectif: verifier qu'une connexion et deconnexion bluetooth 
 	 * se deroule sans probleme
 	 * Etat initial: un agent voiture sans particularite speciale
@@ -42,13 +42,14 @@ global {
 		int connect <- -1;
 		int disconnect <- -1;
 		ask car {
-			connect <- connectCar(0);
-			disconnect <- disconnectCar(0);
+			connect <- connectCar();
+			disconnect <- disconnectCar();
 		}
+
 		assert (connect = 0 and disconnect = 0);
 		do destruction_agents_tests;
 	}
-	
+
 	/* Objectif: verifier que l'action MoveForward se deroule sans 
 	 * probleme
 	 * Etat initial: un agent voiture sans particularite speciale
@@ -60,10 +61,11 @@ global {
 		GuidableVehicle car <- GuidableVehicle.population[0];
 		int resultat_retourne <- -1;
 		ask car {
-			do connectCar(0);
-			resultat_retourne <- moveForward(0);
-			do disconnectCar(0);
+			do connectCar();
+			resultat_retourne <- moveForward();
+			do disconnectCar();
 		}
+
 		assert (resultat_retourne = 0);
 		do destruction_agents_tests;
 	}
@@ -79,14 +81,15 @@ global {
 		GuidableVehicle car <- GuidableVehicle.population[0];
 		int resultat_retourne <- -1;
 		ask car {
-			do connectCar(0);
-			resultat_retourne <- moveBackward(0);
-			do disconnectCar(0);
+			do connectCar();
+			resultat_retourne <- moveBackward();
+			do disconnectCar();
 		}
+
 		assert (resultat_retourne = 0);
 		do destruction_agents_tests;
 	}
-	
+
 	/* Objectif: verifier que l'action ForwardToLeft se deroule sans
 	 * probleme
 	 * Etat initial: un agent voiture sans particularite speciale
@@ -98,14 +101,15 @@ global {
 		GuidableVehicle car <- GuidableVehicle.population[0];
 		int resultat_retourne <- -1;
 		ask car {
-			do connectCar(0);
-			resultat_retourne <- forwardToLeft(0);
-			do disconnectCar(0);
+			do connectCar();
+			resultat_retourne <- forwardToLeft();
+			do disconnectCar();
 		}
+
 		assert (resultat_retourne = 0);
 		do destruction_agents_tests;
 	}
-	
+
 	/* Objectif: verifier que l'action ForwardToRight se deroule sans
 	 * probleme
 	 * Etat initial: un agent voiture sans particularite speciale
@@ -117,14 +121,15 @@ global {
 		GuidableVehicle car <- GuidableVehicle.population[0];
 		int resultat_retourne <- -1;
 		ask car {
-			do connectCar(0);
-			resultat_retourne <- forwardToRight(0);
-			do disconnectCar(0);
+			do connectCar();
+			resultat_retourne <- forwardToRight();
+			do disconnectCar();
 		}
+
 		assert (resultat_retourne = 0);
 		do destruction_agents_tests;
 	}
-	
+
 	/* Objectif: verifier que l'action BackwardToLeft se deroule sans 
 	 * probleme
 	 * Etat initial: un agent voiture sans particularite speciale
@@ -136,14 +141,15 @@ global {
 		GuidableVehicle car <- GuidableVehicle.population[0];
 		int resultat_retourne <- -1;
 		ask car {
-			do connectCar(0);
-			resultat_retourne <- backwardToLeft(0);
-			do disconnectCar(0);
+			do connectCar();
+			resultat_retourne <- backwardToLeft();
+			do disconnectCar();
 		}
+
 		assert (resultat_retourne = 0);
 		do destruction_agents_tests;
 	}
-	
+
 	/* Objectif: verifier que l'action BackwardToRight se deroule sans 
 	 * probleme
 	 * Etat initial: un agent voiture sans particularite speciale
@@ -155,71 +161,15 @@ global {
 		GuidableVehicle car <- GuidableVehicle.population[0];
 		int resultat_retourne <- -1;
 		ask car {
-			do connectCar(0);
-			resultat_retourne <- backwardToRight(0);
-			do disconnectCar(0);
+			do connectCar();
+			resultat_retourne <- backwardToRight();
+			do disconnectCar();
 		}
+
 		assert (resultat_retourne = 0);
 		do destruction_agents_tests;
 	}
-	
-	/* Objectif: verifier que l'action ResetWheels se deroule sans
-	 * probleme
-	 * Etat initial: un agent voiture sans particularite speciale
-	 * Etat final: un agent voiture apres avoir recu l'ordre de recadrer 
-	 * ses roues 
-	 * Resultat attendu: code de retour de l'action = 0
-	 */
-	test "resetWheelsTest" {
-		GuidableVehicle car <- GuidableVehicle.population[0];
-		int resultat_retourne <- -1;
-		ask car {
-			do connectCar(0);
-			resultat_retourne <- resetWheels(0);
-			do disconnectCar(0);
-		}
-		assert (resultat_retourne = 0);
-		do destruction_agents_tests;
-	}
-	
-	/* Objectif: verifier que l'action StopBeforeForward se deroule
-	 * sans probleme
-	 * Etat initial: un agent voiture sans particularite speciale
-	 * Etat final: un agent voiture apres avoir recu l'ordre de s'arreter
-	 * avant un futur ordre d'avancer
-	 * Resultat attendu: code de retour de l'action = 0
-	 */
-	test "stopBeforeForwardTest" {
-		GuidableVehicle car <- GuidableVehicle.population[0];
-		int resultat_retourne <- -1;
-		ask car {
-			do connectCar(0);
-			resultat_retourne <- stopBeforeForward(0);
-			do disconnectCar(0);
-		}
-		assert (resultat_retourne = 0);
-		do destruction_agents_tests;
-	}
-	
-	/* Objectif: verifier que l'action StopBeforeBackward se deroule
-	 * sans probleme
-	 * Etat initial: un agent voiture sans particularite speciale
-	 * Etat final: un agent voiture apres avoir recu l'ordre de s'arreter
-	 * avant un futur ordre de reculer
-	 * Resultat attendu: code de retour de l'action = 0
-	 */
-	test "stopBeforeBackward" {
-		GuidableVehicle car <- GuidableVehicle.population[0];
-		int resultat_retourne <- -1;
-		ask car {
-			do connectCar(0);
-			resultat_retourne <- stopBeforeBackward(0);
-			do disconnectCar(0);
-		}
-		assert (resultat_retourne = 0);
-		do destruction_agents_tests;
-	}
-	
+
 	/* Objectif: verifier que l'action LeftHalfTurn se deroule
 	 * sans probleme
 	 * Etat initial: un agent voiture sans particularite speciale
@@ -231,14 +181,15 @@ global {
 		GuidableVehicle car <- GuidableVehicle.population[0];
 		int resultat_retourne <- -1;
 		ask car {
-			do connectCar(0);
-			resultat_retourne <- leftHalfTurn(0);
-			do disconnectCar(0);
+			do connectCar();
+			resultat_retourne <- leftUTurn();
+			do disconnectCar();
 		}
+
 		assert (resultat_retourne = 0);
 		do destruction_agents_tests;
 	}
-	
+
 	/* Objectif: verifier que l'action RightHalfTurn se deroule 
 	 * sans probleme
 	 * Etat initial: un agent voiture sans particularite speciale
@@ -250,14 +201,15 @@ global {
 		GuidableVehicle car <- GuidableVehicle.population[0];
 		int resultat_retourne <- -1;
 		ask car {
-			do connectCar(0);
-			resultat_retourne <- rightHalfTurn(0);
-			do disconnectCar(0);
+			do connectCar();
+			resultat_retourne <- rightUTurn();
+			do disconnectCar();
 		}
+
 		assert (resultat_retourne = 0);
 		do destruction_agents_tests;
 	}
-	
+
 	/* Objectif: verifier que l'action ClockwiseCircle se deroule 
 	 * sans probleme
 	 * Etat initial: un agent voiture sans particularite speciale
@@ -269,14 +221,15 @@ global {
 		GuidableVehicle car <- GuidableVehicle.population[0];
 		int resultat_retourne <- -1;
 		ask car {
-			do connectCar(0);
-			resultat_retourne <- clockwiseCircle(0);
-			do disconnectCar(0);
+			do connectCar();
+			resultat_retourne <- clockwiseCircle();
+			do disconnectCar();
 		}
+
 		assert (resultat_retourne = 0);
 		do destruction_agents_tests;
 	}
-	
+
 	/* Objectif: verifier que l'action AntiClockwiseCircle se deroule
 	 * sans probleme
 	 * Etat initial: un agent voiture sans particularite speciale
@@ -288,14 +241,75 @@ global {
 		GuidableVehicle car <- GuidableVehicle.population[0];
 		int resultat_retourne <- -1;
 		ask car {
-			do connectCar(0);
-			resultat_retourne <- antiClockwiseCircle(0);
-			do disconnectCar(0);
+			do connectCar();
+			resultat_retourne <- antiClockwiseCircle();
+			do disconnectCar();
 		}
+
 		assert (resultat_retourne = 0);
 		do destruction_agents_tests;
 	}
-	
+
+	/* Objectif: verifier le bon fonctionnement de l'action du
+	 * rangement en creneau
+	 * Etat initial: un agent voiture connecte
+	 * Etat final: un agent voiture deconnecte apres avoir effectue 
+	 * un rangement en creneau
+	 * Resultat attendu: code de retour de l'action = 0
+	 */
+	test "ParallelParkingTest" {
+		GuidableVehicle car <- GuidableVehicle.population[0];
+		int resultat_retourne <- -1;
+		ask car {
+			do connectCar();
+			resultat_retourne <- parallelParking();
+			do disconnectCar();
+		}
+
+		assert (resultat_retourne = 0);
+		do destruction_agents_tests;
+	}
+
+	/* Objectif: verifier le bon fonctionnement de l'action du 
+	 * rangement epis en arriere 
+	 * Etat initial: un agent voiture connecte en bluetooth
+	 * Etat final: un agent voiture deconnecte apres avoir effectue 
+	 * l'action
+	 * Resultat attendu: code de retour de l'action = 0
+	 */
+	test "BackwardParkingTest" {
+		GuidableVehicle car <- GuidableVehicle.population[0];
+		int resultat_retourne <- -1;
+		ask car {
+			do connectCar();
+			resultat_retourne <- backwardParking();
+			do disconnectCar();
+		}
+
+		assert (resultat_retourne = 0);
+		do destruction_agents_tests;
+	}
+
+	/* Objectif: verifier le bon fonctionnement de l'action du
+	 * rangement epis en avant
+	 * Etat initial: un agent voiture connecte en bluetooth
+	 * Etat final: un agent voiture deconnecte apres avoir effectue
+	 * l'action
+	 * Resultat attendu: code de retour de l'action = 0
+	 */
+	test "ForwardParkingTest" {
+		GuidableVehicle car <- GuidableVehicle.population[0];
+		int resultat_retourne <- -1;
+		ask car {
+			do connectCar();
+			resultat_retourne <- forwardParking();
+			do disconnectCar();
+		}
+
+		assert (resultat_retourne = 0);
+		do destruction_agents_tests;
+	}
+
 	/* Objectif: verifier que l'action Slalom se deroule sans
 	 * probleme
 	 * Etat initial: un agent voiture sans particularite speciale
@@ -307,16 +321,16 @@ global {
 		GuidableVehicle car <- GuidableVehicle.population[0];
 		int resultat_retourne <- -1;
 		ask car {
-			do connectCar(0);
-			resultat_retourne <- slalomMove(0);
-			do disconnectCar(0);
+			do connectCar();
+			resultat_retourne <- slalom();
+			do disconnectCar();
 		}
+
 		assert (resultat_retourne = 0);
 		do destruction_agents_tests;
 	}
-	
+
 }
 
 experiment TestBluetooth type: test autorun: true {
-
 }

@@ -10,7 +10,7 @@ model GuidableVehicle
 import "Vehicle.gaml"
 
 /* Insert your model definition here */
-species GuidableVehicle parent: Vehicle skills: [Bluetooth]{
+species GuidableVehicle parent: Vehicle skills:[Bluetooth]{
 	bool is_connected <- false;
 	int idGuidable;
 	
@@ -23,7 +23,11 @@ species GuidableVehicle parent: Vehicle skills: [Bluetooth]{
 			do acceleration;
 		}
 		
-		point new_location <- {list_ligne[2*idGuidable]*mise_a_echelle, list_ligne[2*idGuidable+1]*mise_a_echelle, 0.0};
+		float posx <- getXCarPosition(idGuidable);
+		float posy <- getYCarPosition(idGuidable);
+		float speedx <- getXCarSpeed(idGuidable);
+		float speedy <- getYCarSpeed(idGuidable);
+		point new_location <- {posx*mise_a_echelle, posy*mise_a_echelle, 0.0};
 		location <- new_location;
 		//angle_rotation <- float(list_ligne[3*idGuidable+2]);
 		do calcul_eq_route;
@@ -38,7 +42,7 @@ species GuidableVehicle parent: Vehicle skills: [Bluetooth]{
 		speed <- 0.0;
 		nb_crashed_cars <- nb_crashed_cars +1;
 		if(is_connected){
-			do disconnectCar(idGuidable);
+			do disconnectCar();
 			is_connected <- false;
 		}
 	}

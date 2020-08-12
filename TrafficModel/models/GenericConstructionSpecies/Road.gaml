@@ -12,6 +12,7 @@ import "../OtherSpecies/Rule.gaml"
 
 species Road parent: Construction {
 	rgb color <- #black;
+	
 	int nombreVoies;
 	float vitesseMax;
 	list<Rule> rules;
