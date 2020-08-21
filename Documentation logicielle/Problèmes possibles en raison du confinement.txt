@@ -1,9 +1,0 @@
---- Problèmes possibles en fonction du confinement
-
-Lors de la connexion en Bluetooth avec des voitures modèles réduit réelles, il faudra
-ajouter dans l'API et dans le plug-in Gama la détection des voitures et enfin, l'id des 
-véhicules correspondront à leur position dans le tableau des véhicules détectés.
-
-D'autres problèmes peuvent aussi apparaître en fonction des mises à l'échelle, pour cela
-l'attribut mise_a_echelle dans le fichier Main.gaml est disponible pour effectuer des 
-modifications.
