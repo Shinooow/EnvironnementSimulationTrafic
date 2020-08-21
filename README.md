@@ -2,7 +2,7 @@
 
 PREREQUIS:
 - Posséder la technologie Bluetooth sur l'ordinateur
-- Pouvoir utiliser Python sous Windows 10
+- Pouvoir utiliser Python 3 (ou plus récent) sous Windows 10
 
 INSTALLATION:
 - Installer Gama en mode développeur avec le plug-in (voir https://gama-platform.github.io/)
